@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html ng-app="buttonApp">
+<head>
+<title>Angular Test</title>
+<script type="text/javascript" src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"></link>
+<script type="text/javascript">
+	var app = angular.module('buttonApp', []);
+
+	app.controller('buttonController', ['$scope', function($scope){
+		$scope.colors = [];
+
+		function hex2hsl(hex, off) {
+			var r = parseInt(hex.substring(0,1), 16)/255,
+				g = parseInt(hex.substring(2,3), 16)/255,
+				b = parseInt(hex.substring(4,5), 16)/255;
+
+			var Cmx = Math.max(r,g,b),
+				Cmn = Math.min(r,g,b),
+				del = Cmx - Cmn;
+
+			var h, s, l;
+
+			if (del == 0) {
+				h = 0;
+			} else if (Cmx == r) {
+				h = 60*(((g-b)/del)%6);
+			} else if (Cmx == g) {
+				h = 60*(((b-r)/del)+2);
+			} else if (Cmx == b) {
+				h = 60*(((r-g)/del)+4);
+			}
+
+			l = (Cmx+Cmn)/2
+
+			if (del == 0) {
+				s = 0;
+			} else {
+				s = del/(1-Math.abs((2*l)-1))
+			}
+
+			off = off/100;
+
+			if (l*(1+off) > 1) {
+				l = l*(1-off);
+			} else {
+				l = l*(1+off);
+			}
+
+			if (hex === 'FFFFFF') {
+				return 'hsl( 0, 0%, '+l*100+'%)'
+			} else {
+				return 'hsl('+h+', '+s*100+'%, '+l*1000+'%)';
+			}
+		};
+		$scope.clk = function() {
+			var temp = [Math.floor(Math.random()*16777215)];
+			console.log("hello")
+			$scope.colors = temp.concat($scope.colors);
+			$scope.w = 100;
+			if ($scope.colors.length >= 15) {
+				$scope.colors.pop();
+			};
+		};
+
+		$scope.c2s = function(c) {
+			if (c !== undefined) {
+				c = c.toString(16);
+				while(c.length < 6) {
+					c = "0" + c;
+				}
+				return c;
+			}
+		};
+
+		$scope.t = function(txt) {
+			var hsl = hex2hsl($scope.c2s(txt), 20);
+			return hsl;
+		};
+	}]);
+
+	app.filter('format', function() {
+		return function(input) {
+			return '#' + input;
+		};
+	});
+</script>
+<style type="text/css">
+div {
+	display: block;
+	height: 100px;
+	text-align: center;
+	font-size: 30px;
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 100px;
+}
+button {
+	display: none;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+</style>
+</head>
+
+<body ng-controller='buttonController' style="overflow: hidden" ng-keypress="clk()">
+	<button ng-click="clk()">{{c2s(colors[0]) | format}}</button>
+	<div ng-repeat="clr in colors" ng-style="{'background-color': '#' + c2s(clr), 'width': w + '%', 'color': t(clr)}">#{{c2s(clr) | uppercase}}</div>
+</body>
+
+
+</html>
