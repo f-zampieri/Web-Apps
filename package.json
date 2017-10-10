@@ -1,0 +1,24 @@
+{
+  "name": "web-apps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "StarDiary/diaryApp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/f-zampieri/Web-Apps.git"
+  },
+  "author": "Ramamurthy Siripuram, Francisco Zampieri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/f-zampieri/Web-Apps/issues"
+  },
+  "homepage": "https://github.com/f-zampieri/Web-Apps#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.1",
+    "require": "^2.4.20"
+  }
+}

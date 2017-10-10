@@ -1,6 +1,6 @@
 var app = angular.module('diaryApp', ['ngSanitize']);
 
-app.controller('diaryController', ['$scope', '$sanitize', '$sce', function($scope, $sanitize, $sce) {
+app.controller('diaryController', ['$scope', '$sanitize', '$sce', '$http', function($scope, $sanitize, $sce, $http) {
 	$scope.in = 'Hello welcome to *\\Diary*\\! Try using *stars* to tag your entries!';
 	var txt = document.getElementById('txt');
 	var pos;
@@ -53,6 +53,7 @@ app.controller('diaryController', ['$scope', '$sanitize', '$sce', function($scop
 			curEntry.time = new Date();
 			$scope.entries = [curEntry].concat($scope.entries);
 			console.log($scope.entries);
+			submitToServer(curEntry);
 			curEntry = {
 				'text': '',
 				'tags': [],
@@ -60,6 +61,7 @@ app.controller('diaryController', ['$scope', '$sanitize', '$sce', function($scop
 			};
 			$scope.in = '';	
 		}
+
 	};
 	$scope.star = function(input) {
 		// pos = doGetCaretPosition(txt);
@@ -116,6 +118,9 @@ app.controller('diaryController', ['$scope', '$sanitize', '$sce', function($scop
 			range.moveStart('character', pos);
 			range.select();
 		}
+	}
+	function submitToServer(entry) {
+		$http.post('http://localhost:9091/submit-entry', entry);
 	}
 
 	$scope.addT = function() {
